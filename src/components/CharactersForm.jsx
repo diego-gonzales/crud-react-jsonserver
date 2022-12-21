@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { createCharacter, getCharacter, updateCharacter } from "../services/characters";
+import {
+  createCharacter,
+  getCharacter,
+  updateCharacter
+} from "../services/characters";
 
 const initialForm = {
   name: "",
@@ -30,7 +34,7 @@ const CharactersForm = () => {
     } else {
       await updateCharacter(params.id, myForm);
     }
-    navigate('/');
+    navigate("/");
   };
 
   useEffect(() => {
@@ -61,6 +65,8 @@ const CharactersForm = () => {
               />
             </div>
           </div>
+        </div>
+        <div className="row">
           <div className="col-md-6">
             <div className="form-group">
               <label htmlFor="anime" classanime="form-label">
@@ -78,7 +84,7 @@ const CharactersForm = () => {
           </div>
         </div>
         <div className="row mt-2">
-          <div className="d-grid col-md-4 mx-auto">
+          <div className="col-6">
             <button type="submit" className="btn btn-primary">
               Save
             </button>
