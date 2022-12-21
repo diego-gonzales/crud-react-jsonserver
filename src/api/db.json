@@ -1,0 +1,24 @@
+{
+  "characters": [
+    {
+      "id": 1,
+      "name": "Character 1",
+      "anime": "Anime 1"
+    },
+    {
+      "id": 2,
+      "name": "Character 2",
+      "anime": "Anime 2"
+    },
+    {
+      "id": 3,
+      "name": "Character 3",
+      "anime": "Anime 3"
+    },
+    {
+      "id": 4,
+      "name": "Character 4",
+      "anime": "Anime 4"
+    }
+  ]
+}
