@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { ACTION_TYPES } from "../actions/charactersActions";
+import { CharactersDispatchContext } from "../contexts/charactersContext";
 import {
   createCharacter,
   getCharacter,
@@ -12,6 +14,7 @@ const initialForm = {
 };
 
 const CharacterForm = () => {
+  const dispatch = useContext(CharactersDispatchContext);
   const [myForm, setMyForm] = useState(initialForm);
   const params = useParams();
   const navigate = useNavigate();
@@ -29,11 +32,20 @@ const CharacterForm = () => {
     if (!myForm.name || !myForm.anime) return;
 
     if (!params.id) {
-      await createCharacter(myForm);
+      const newCharacter = await createCharacter(myForm);
+      dispatch({
+        type: ACTION_TYPES.ADD,
+        character: newCharacter
+      });
     } else {
-      await updateCharacter(params.id, myForm);
+      const updatedCharacter = await updateCharacter(params.id, myForm);
+      dispatch({
+        type: ACTION_TYPES.UPDATE,
+        id: params.id,
+        character: updatedCharacter
+      });
     }
-  
+
     navigate("/characters");
   };
 

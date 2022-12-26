@@ -1,10 +1,15 @@
-import { useState, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { ACTION_TYPES } from "../actions/charactersActions";
+import {
+  CharactersContext,
+  CharactersDispatchContext
+} from "../contexts/charactersContext";
 import { deleteCharacter, getCharacters } from "../services/characters";
 
 const Characters = () => {
-  const [characters, setCharacters] = useState(null);
-  const [isLoading, setIsLoading] = useState(null);
+  const characters = useContext(CharactersContext);
+  const dispatch = useContext(CharactersDispatchContext);
 
   const handleDelete = async (id) => {
     const confirmDelete = confirm("Are you sure to delete this character?");
@@ -12,16 +17,22 @@ const Characters = () => {
     if (!confirmDelete) return;
 
     await deleteCharacter(id);
-    const newCharacters = characters.filter((character) => character.id !== id);
-    setCharacters(newCharacters);
+
+    dispatch({
+      type: ACTION_TYPES.DELETE,
+      id: id
+    });
   };
 
   useEffect(() => {
-    setIsLoading(true);
     getCharacters()
-      .then((resp) => setCharacters(resp))
-      .catch(console.log)
-      .finally(() => setIsLoading(false));
+      .then((resp) => {
+        dispatch({
+          type: ACTION_TYPES.GET_ALL,
+          data: resp
+        });
+      })
+      .catch(console.log);
   }, []);
 
   return (
@@ -31,7 +42,6 @@ const Characters = () => {
           Add
         </Link>
       </div>
-      {isLoading && <p>Loading...</p>}
       {characters && (
         <table className="table text-center">
           <thead>
