@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   createCharacter,
@@ -12,7 +11,7 @@ const initialForm = {
   anime: ""
 };
 
-const CharactersForm = () => {
+const CharacterForm = () => {
   const [myForm, setMyForm] = useState(initialForm);
   const params = useParams();
   const navigate = useNavigate();
@@ -34,7 +33,8 @@ const CharactersForm = () => {
     } else {
       await updateCharacter(params.id, myForm);
     }
-    navigate("/");
+  
+    navigate("/characters");
   };
 
   useEffect(() => {
@@ -50,35 +50,35 @@ const CharactersForm = () => {
       <h2>{params.id ? "Edit character" : "Add character"}</h2>
       <form onSubmit={handleSubmit}>
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-6">
             <div className="form-group">
               <label htmlFor="name" className="form-label">
                 Name
               </label>
               <input
+                type="text"
                 id="name"
                 name="name"
-                type="text"
                 className="form-control"
-                onChange={handleChange}
                 value={myForm.name}
+                onChange={handleChange}
               />
             </div>
           </div>
         </div>
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-6">
             <div className="form-group">
-              <label htmlFor="anime" classanime="form-label">
+              <label htmlFor="anime" className="form-label">
                 Anime
               </label>
               <input
+                type="text"
                 id="anime"
                 name="anime"
-                type="text"
                 className="form-control"
-                onChange={handleChange}
                 value={myForm.anime}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -95,4 +95,4 @@ const CharactersForm = () => {
   );
 };
 
-export default CharactersForm;
+export default CharacterForm;

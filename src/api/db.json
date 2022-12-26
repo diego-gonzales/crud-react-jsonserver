@@ -1,19 +1,19 @@
 {
   "characters": [
     {
-      "id": 2,
-      "name": "Character 2",
-      "anime": "Anime 2"
+      "name": "Gokú",
+      "anime": "Dragon Ball Z",
+      "id": 1
     },
     {
-      "id": 3,
-      "name": "Character 3",
-      "anime": "Anime 3"
+      "name": "Krilin",
+      "anime": "Dragon Ball Z",
+      "id": 2
     },
     {
-      "id": 4,
-      "name": "Character 4",
-      "anime": "Anime 4"
+      "name": "Ash",
+      "anime": "Pokemon",
+      "id": 3
     }
   ]
 }

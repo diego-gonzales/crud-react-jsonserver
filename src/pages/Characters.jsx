@@ -1,23 +1,23 @@
 import { useState, useEffect } from "react";
-import { deleteCharacter, getCharacters } from "../services/characters";
-import Message from "./Message";
 import { Link } from "react-router-dom";
+import { deleteCharacter, getCharacters } from "../services/characters";
 
 const Characters = () => {
   const [characters, setCharacters] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(null);
 
-  const handleDelete = async (character) => {
-    const areYouSure = confirm("Are you sure to delete character?");
+  const handleDelete = async (id) => {
+    const confirmDelete = confirm("Are you sure to delete this character?");
 
-    if (!areYouSure) return;
+    if (!confirmDelete) return;
 
-    await deleteCharacter(character.id);
-    const newCharacters = characters.filter(element => element.id !== character.id);
+    await deleteCharacter(id);
+    const newCharacters = characters.filter((character) => character.id !== id);
     setCharacters(newCharacters);
-  }
+  };
 
   useEffect(() => {
+    setIsLoading(true);
     getCharacters()
       .then((resp) => setCharacters(resp))
       .catch(console.log)
@@ -26,15 +26,14 @@ const Characters = () => {
 
   return (
     <div>
-      <h2>List</h2>
       <div>
-        <Link to="/character/add" className="btn btn-primary">
+        <Link className="btn btn-primary" to="/character/add">
           Add
         </Link>
       </div>
-      {isLoading && <Message message="Loading..." type="primary" />}
+      {isLoading && <p>Loading...</p>}
       {characters && (
-        <table className="table">
+        <table className="table text-center">
           <thead>
             <tr>
               <th>#</th>
@@ -44,22 +43,23 @@ const Characters = () => {
             </tr>
           </thead>
           <tbody>
-            {characters.length > 0 ? (
-              characters.map((element) => (
-                <tr key={element.id}>
-                  <td>{element.id}</td>
-                  <td>{element.name}</td>
-                  <td>{element.anime}</td>
+            {characters.length ? (
+              characters.map((character) => (
+                <tr key={character.id}>
+                  <td>{character.id}</td>
+                  <td>{character.name}</td>
+                  <td>{character.anime}</td>
                   <td>
                     <Link
-                      to={`/character/edit/${element.id}`}
-                      className="btn btn-success"
+                      className="btn btn-success mx-1"
+                      to={`/character/edit/${character.id}`}
                     >
                       Edit
                     </Link>
                     <button
+                      type="button"
                       className="btn btn-danger mx-1"
-                      onClick={() => handleDelete(element)}
+                      onClick={() => handleDelete(character.id)}
                     >
                       Delete
                     </button>
@@ -68,9 +68,7 @@ const Characters = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="text-center">
-                  No data
-                </td>
+                <td colSpan="4">No data</td>
               </tr>
             )}
           </tbody>
