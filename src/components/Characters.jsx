@@ -2,24 +2,24 @@ import { useState, useEffect } from "react";
 import { deleteCharacter, getCharacters } from "../services/characters";
 import Message from "./Message";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { setMyCharacters, deleteMyCharacter } from "../store/slices/characterSlice";
 
 const Characters = () => {
-  const [characters, setCharacters] = useState(null);
+  const { characters } = useSelector(state => state.characters);
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
 
   const handleDelete = async (character) => {
     const areYouSure = confirm("Are you sure to delete character?");
-
     if (!areYouSure) return;
-
     await deleteCharacter(character.id);
-    const newCharacters = characters.filter(element => element.id !== character.id);
-    setCharacters(newCharacters);
+    dispatch(deleteMyCharacter(character.id));
   }
 
   useEffect(() => {
     getCharacters()
-      .then((resp) => setCharacters(resp))
+      .then((resp) => dispatch(setMyCharacters(resp)))
       .catch(console.log)
       .finally(() => setIsLoading(false));
   }, []);

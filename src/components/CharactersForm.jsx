@@ -1,11 +1,15 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   createCharacter,
   getCharacter,
   updateCharacter
 } from "../services/characters";
+import { useDispatch } from "react-redux";
+import {
+  createMyCharacter,
+  updateMyCharacter
+} from "../store/slices/characterSlice";
 
 const initialForm = {
   name: "",
@@ -13,6 +17,7 @@ const initialForm = {
 };
 
 const CharactersForm = () => {
+  const dispatch = useDispatch();
   const [myForm, setMyForm] = useState(initialForm);
   const params = useParams();
   const navigate = useNavigate();
@@ -30,9 +35,11 @@ const CharactersForm = () => {
     if (!myForm.name || !myForm.anime) return;
 
     if (!params.id) {
-      await createCharacter(myForm);
+      const createdCharacter = await createCharacter(myForm);
+      dispatch(createMyCharacter(createdCharacter));
     } else {
-      await updateCharacter(params.id, myForm);
+      const updatedCharacter = await updateCharacter(params.id, myForm);
+      dispatch(updateMyCharacter(updatedCharacter));
     }
     navigate("/");
   };
