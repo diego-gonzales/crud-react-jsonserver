@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import { deleteCharacter, getCharacters } from "../services/characters";
 import Message from "./Message";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux';
-import { setMyCharacters, deleteMyCharacter } from "../store/slices/characterSlice";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setMyCharacters,
+  deleteMyCharacter
+} from "../store/slices/characterSlice";
 
 const Characters = () => {
-  const { characters } = useSelector(state => state.characters);
+  const { characters } = useSelector((state) => state.characters);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -15,7 +18,7 @@ const Characters = () => {
     if (!areYouSure) return;
     await deleteCharacter(character.id);
     dispatch(deleteMyCharacter(character.id));
-  }
+  };
 
   useEffect(() => {
     getCharacters()
@@ -38,8 +41,11 @@ const Characters = () => {
           <thead>
             <tr>
               <th>#</th>
-              <th>Name</th>
-              <th>Anime</th>
+              <th>First name</th>
+              <th>Last name</th>
+              <th>Email</th>
+              <th>DNI</th>
+              <th>Age</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -48,8 +54,11 @@ const Characters = () => {
               characters.map((element) => (
                 <tr key={element.id}>
                   <td>{element.id}</td>
-                  <td>{element.name}</td>
-                  <td>{element.anime}</td>
+                  <td>{element.firstname}</td>
+                  <td>{element.lastname}</td>
+                  <td>{element.email}</td>
+                  <td>{element.dni}</td>
+                  <td>{element.age}</td>
                   <td>
                     <Link
                       to={`/character/edit/${element.id}`}
@@ -68,7 +77,7 @@ const Characters = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="text-center">
+                <td colSpan="6" className="text-center">
                   No data
                 </td>
               </tr>

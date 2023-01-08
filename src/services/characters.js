@@ -1,5 +1,4 @@
 import { http } from "../interceptors/axiosInterceptor";
-const apiUrl = import.meta.env.VITE_API_URL;
 
 export const getCharacters = async () => {
   const { data } = await http.get('characters');

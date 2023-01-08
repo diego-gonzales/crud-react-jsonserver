@@ -1,19 +1,12 @@
 {
   "characters": [
     {
-      "id": 3,
-      "name": "Character 3",
-      "anime": "Anime 3"
-    },
-    {
-      "name": "abc character",
-      "anime": "abc anime",
-      "id": 4
-    },
-    {
-      "name": "Diego Gonzales",
-      "anime": "Diego Gonzales anime",
-      "id": 5
+      "firstname": "sasa2",
+      "lastname": "sda2",
+      "email": "asda2@aksa.com.pe",
+      "dni": "77382457",
+      "age": "32",
+      "id": 1
     }
   ]
 }

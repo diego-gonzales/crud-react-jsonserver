@@ -10,83 +10,186 @@ import {
   createMyCharacter,
   updateMyCharacter
 } from "../store/slices/characterSlice";
+import { useForm } from "react-hook-form";
 
 const initialForm = {
-  name: "",
-  anime: ""
+  firstname: "",
+  lastname: "",
+  email: "",
+  dni: "",
+  age: null
 };
 
 const CharactersForm = () => {
   const dispatch = useDispatch();
-  const [myForm, setMyForm] = useState(initialForm);
   const params = useParams();
   const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset,
+    setValue
+  } = useForm({
+    defaultValues: initialForm
+  });
 
-  const handleChange = (e) => {
-    setMyForm({
-      ...myForm,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!myForm.name || !myForm.anime) return;
-
+  const onSubmit = async (data) => {
     if (!params.id) {
-      const createdCharacter = await createCharacter(myForm);
+      const createdCharacter = await createCharacter(data);
       dispatch(createMyCharacter(createdCharacter));
     } else {
-      const updatedCharacter = await updateCharacter(params.id, myForm);
+      const updatedCharacter = await updateCharacter(params.id, data);
       dispatch(updateMyCharacter(updatedCharacter));
     }
     navigate("/");
   };
 
+  const regexEmail =
+    /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+
   useEffect(() => {
     if (!params.id) return;
 
     getCharacter(params.id)
-      .then((resp) => setMyForm(resp))
+      .then((resp) => {
+        const { id, ...resto } = resp;
+        reset({...resto});
+        // setValue("firstname", resp.firstname);
+        // setValue("lastname", resp.lastname);
+      })
       .catch(console.log);
   }, []);
 
   return (
     <div>
       <h2>{params.id ? "Edit character" : "Add character"}</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlFor="name" className="form-label">
-                Name
+              <label htmlFor="firstname" className="form-label">
+                Firstname
               </label>
               <input
-                id="name"
-                name="name"
+                id="firstname"
                 type="text"
                 className="form-control"
-                onChange={handleChange}
-                value={myForm.name}
+                {...register("firstname", { required: true })}
               />
+              {errors.firstname && (
+                <small className="form-text text-danger">
+                  This field is required
+                </small>
+              )}
             </div>
           </div>
         </div>
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlFor="anime" classanime="form-label">
-                Anime
+              <label htmlFor="lastname" classanime="form-label">
+                Lastname
               </label>
               <input
-                id="anime"
-                name="anime"
+                id="lastname"
                 type="text"
                 className="form-control"
-                onChange={handleChange}
-                value={myForm.anime}
+                {...register("lastname", { required: true })}
               />
+              {errors.lastname?.type === "required" && (
+                <small className="form-text text-danger">
+                  This field is required
+                </small>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-6">
+            <div className="form-group">
+              <label htmlFor="email" classanime="form-label">
+                Email
+              </label>
+              <input
+                id="email"
+                type="text"
+                className="form-control"
+                {...register("email", { required: true, pattern: regexEmail })}
+              />
+              {errors.email?.type === "required" && (
+                <small className="form-text text-danger">
+                  This field is required
+                </small>
+              )}
+              {errors.email?.type === "pattern" && (
+                <small className="form-text text-danger">
+                  Email is invalid
+                </small>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-6">
+            <div className="form-group">
+              <label htmlFor="dni" classanime="form-label">
+                DNI
+              </label>
+              <input
+                id="dni"
+                type="number"
+                className="form-control"
+                {...register("dni", {
+                  required: true,
+                  minLength: 8,
+                  maxLength: 8
+                })}
+              />
+              {errors.dni?.type === "required" && (
+                <small className="form-text text-danger">
+                  This field is required
+                </small>
+              )}
+              {errors.dni?.type === "minLength" && (
+                <small className="form-text text-danger">
+                  DNI must have 8 characters
+                </small>
+              )}
+              {errors.dni?.type === "maxLength" && (
+                <small className="form-text text-danger">
+                  DNI must have 8 characters
+                </small>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-6">
+            <div className="form-group">
+              <label htmlFor="age" classanime="form-label">
+                Age
+              </label>
+              <input
+                id="age"
+                type="number"
+                className="form-control"
+                {...register("age", {
+                  required: true,
+                  min: 18
+                })}
+              />
+              {errors.age?.type === "required" && (
+                <small className="form-text text-danger">
+                  This field is required
+                </small>
+              )}
+              {errors.age?.type === "min" && (
+                <small className="form-text text-danger">
+                  Age must be over 18
+                </small>
+              )}
             </div>
           </div>
         </div>
